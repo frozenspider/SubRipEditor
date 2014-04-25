@@ -1,0 +1,14 @@
+# Eclipse
+/bin
+.classpath
+.project
+.cache
+
+# sbt
+target/
+
+# Application
+options.conf
+
+# Assembly
+SubRipEditor-*.jar
