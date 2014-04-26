@@ -311,8 +311,8 @@ class SubRipEditorUI extends Frame
     val from = selectedIdxOption.getOrElse(-1) + 1
     val idx = subtitlesList.listData drop (from) indexWhere (_.text.toLowerCase contains toFind)
     if (idx != -1) {
-      subtitlesList.selectIndices(idx)
-      subtitlesList.ensureIndexIsVisible(idx)
+      subtitlesList.selectIndices(from + idx)
+      subtitlesList.ensureIndexIsVisible(from + idx)
     }
   }
 
