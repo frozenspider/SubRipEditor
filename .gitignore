@@ -6,6 +6,7 @@
 
 # sbt
 target/
+src-managed/
 
 # Application
 options.conf
