@@ -33,7 +33,7 @@ Planned features
 
 * **Func:** add support for custom transliterations
 * **Func:** add configurable options
-* **Code:** clean it, properly adopt stackable trait pattern 
+* **Code:** clean it
 * **Code:** improve test coverage
 
 License
