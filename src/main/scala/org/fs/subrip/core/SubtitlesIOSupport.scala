@@ -46,7 +46,7 @@ trait SubtitlesIOSupport extends IOSupport { this: Logging =>
       case "" => None
       case x  => Some(x)
     }
-    val subsWithComment = commentNormalized map (c => commenter.addComment(subs, c)) getOrElse subs
+    val subsWithComment = commentNormalized map (c => commenter.setComment(subs, c)) getOrElse subs
     writeToFile(subsWithComment, file)
   }
 }

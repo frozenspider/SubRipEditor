@@ -9,7 +9,7 @@ import org.fs.subrip.io.TextCommenter
  * @author FS
  */
 object SubRipRecordCommenter extends TextCommenter[SubRipRecord] {
-  def addComment(subs: Seq[SubRipRecord], comment: String): Seq[SubRipRecord] = {
+  def setComment(subs: Seq[SubRipRecord], comment: String): Seq[SubRipRecord] = {
     val commentRec = SubRipRecord(
       id = 999999,
       start = TimeMark(9999, 0, 0, 0),
