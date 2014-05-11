@@ -40,6 +40,23 @@ class SubRipRecordTextFormatReaderSpec
     assert(expected === actual)
   }
 
+  it should "parse single entry terminated without line breaks" in {
+    val src = ("" +
+      "1\n" +
+      "00:00,000 --> 100:59:59,333\n" +
+      "Two\n" +
+      "Lines"
+    )
+    val actual = reader.read(new StringReader(src)).get
+    val expected = SubRipRecord( // format: OFF
+      id    = 1,
+      start = TimeMark(0, 0, 0, 000),
+      end   = TimeMark(100, 59, 59, 333),
+      text  = "Two\nLines"
+    ) // format: ON
+    assert(expected === actual)
+  }
+
   it should "parse 10000 entries" in {
     def getEntryStr(i: Int): String = {
       s"$i\n" +
