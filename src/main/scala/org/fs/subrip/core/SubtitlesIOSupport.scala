@@ -1,6 +1,7 @@
 package org.fs.subrip.core
 
 import java.io.File
+import java.io.StringReader
 
 import scala.io.Codec
 import scala.io.Source
@@ -17,7 +18,9 @@ import org.slf4s.Logging
 trait SubtitlesIOSupport extends IOSupport { this: Logging =>
   private def readFromFile[A](f: File)(implicit r: TextReader[Seq[A]]): Try[Seq[A]] = Try {
     measureAndLog(log) {
-      r.read(Source.fromFile(f, 1042)(Codec.UTF8).reader)
+      val content = Source.fromFile(f, 1024)(Codec.UTF8).mkString
+      val normalized = normalizeContent(content)
+      r.read(new StringReader(normalized))
     } (ms => s"File ${f.getName} loaded in $ms ms")
   }.flatten
 
@@ -37,7 +40,7 @@ trait SubtitlesIOSupport extends IOSupport { this: Logging =>
   }
 
   /** To workaround UTF BOM symbol */
-  private def normalizeString(s: String): String =
+  private def normalizeContent(s: String): String =
     s.replace("\ufeff", "");
 
   def saveSubtitlesFile[A <: SubtitleRecord](file: File, subs: Seq[A], comment: String) // format: OFF
