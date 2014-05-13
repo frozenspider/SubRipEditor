@@ -2,7 +2,7 @@ name         := "SubRipEditor"
 
 description  := "Simple editor for SubRipText (.srt) subtitles"
 
-version      := "1.0.2"
+version      := "1.0.3"
 
 scalaVersion := "2.10.3"
 
