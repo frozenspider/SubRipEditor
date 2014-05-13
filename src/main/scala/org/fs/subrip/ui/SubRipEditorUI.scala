@@ -13,7 +13,9 @@ import scala.util.Failure
 import scala.util.Success
 
 import org.fs.subrip.BuildInfo
-import org.fs.subrip.core.SubRipEditorUISupport
+import org.fs.subrip.core.ClipboardSupport
+import org.fs.subrip.core.OptionsSupport
+import org.fs.subrip.core.SubtitlesIOSupport
 import org.fs.subrip.core.transliteration.ConfigurableTransliterator
 import org.fs.subrip.entity.subrip.SubRipRecord
 import org.fs.subrip.entity.subrip.TimeMark
@@ -21,7 +23,7 @@ import org.fs.subrip.io.impl.subrip.SubRipRecordCommenter
 import org.fs.subrip.io.impl.subrip.SubRipRecordTextFormat
 import org.fs.subrip.io.parsing.SeqParsingFormat
 import org.fs.subrip.ui.model.SubtitlesList
-import org.fs.subrip.utility.ClipboardSupport
+import org.slf4s.Logging
 
 import javax.swing.BorderFactory
 import javax.swing.JComponent
@@ -33,8 +35,10 @@ import javax.swing.filechooser.FileNameExtensionFilter
  * @author FS
  */
 class SubRipEditorUI extends Frame
-    with SubRipEditorUISupport
-    with ClipboardSupport {
+    with SubtitlesIOSupport
+    with ClipboardSupport
+    with OptionsSupport
+    with Logging {
 
   private implicit val srtFormat = SubRipRecordTextFormat
   private implicit val srtSeqFormat = new SeqParsingFormat(SubRipRecordTextFormat)
@@ -260,10 +264,10 @@ class SubRipEditorUI extends Frame
     }
   }
 
-  private def loadSubtitlesFile(file: File): Unit = {
+  private def loadSubtitlesFileInner(file: File): Unit = {
     currFile = Some(file)
     updateOptions(options copy (lastAccessedFilePath = file.getAbsolutePath))
-    loadSubtitlesFileContent(file) match {
+    loadSubtitlesFile(file) match {
       case Success((subs, comment)) => {
         subtitlesList.listData = subs
         commentsPane.text = comment
@@ -328,7 +332,7 @@ class SubRipEditorUI extends Frame
   private def loadSubtitlesFileAction(): Unit = {
     val fc = createFileChooser
     fc.showOpenDialog(null) match {
-      case FileChooser.Result.Approve => loadSubtitlesFile(fc.selectedFile)
+      case FileChooser.Result.Approve => loadSubtitlesFileInner(fc.selectedFile)
       case _                          => ()
     }
   }
@@ -336,7 +340,7 @@ class SubRipEditorUI extends Frame
   private def reloadSubtitlesFileAction(): Unit =
     currFile foreach { file =>
       if (noChangesOrSure)
-        loadSubtitlesFile(file)
+        loadSubtitlesFileInner(file)
     }
 
   private def saveSubtitlesFileAction(): Boolean = {
@@ -354,7 +358,7 @@ class SubRipEditorUI extends Frame
       }
     fileOpt foreach { file =>
       unsavedChanges = false
-      saveChanges(file, subtitlesList.listData, commentsPane.text)
+      saveSubtitlesFile(file, subtitlesList.listData, commentsPane.text)
     }
     fileOpt.isDefined
   }

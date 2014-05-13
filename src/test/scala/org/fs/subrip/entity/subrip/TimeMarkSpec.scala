@@ -48,4 +48,17 @@ class TimeMarkSpec
       assert(src + delta === expected)
     }
   }
+
+  it should "parse time marks" in {
+    val examples = Table[String, TimeMark]( // format: OFF
+      (("String",      "Expected TimeMmark")),
+      ("12:34:56,789", TimeMark( 12,34,56,789)),
+      (   "34:56,789", TimeMark(  0,34,56,789)),
+      (   "34:56.789", TimeMark(  0,34,56,789))
+    ) // format: ON
+    forAll(examples) { (str, expected) =>
+      val parsed = TimeMark.fromString(str)
+      assert(parsed.get === expected)
+    }
+  }
 }

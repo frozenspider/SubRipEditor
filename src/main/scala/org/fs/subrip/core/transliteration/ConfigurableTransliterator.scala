@@ -1,11 +1,13 @@
 package org.fs.subrip.core.transliteration
 
-import org.fs.subrip.utility.ConfigSupport
+import org.fs.subrip.core.internal.ConfigSupport
 
 /**
  * @author FS
  */
-class ConfigurableTransliterator extends Transliterator with ConfigSupport {
+class ConfigurableTransliterator
+    extends Transliterator
+    with ConfigSupport {
 
   private val layoutsFileName = "transliteration.conf"
 

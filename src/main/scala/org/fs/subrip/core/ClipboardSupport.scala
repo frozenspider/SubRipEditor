@@ -1,4 +1,4 @@
-package org.fs.subrip.utility
+package org.fs.subrip.core
 
 import java.awt.datatransfer.Clipboard
 import java.awt.datatransfer.ClipboardOwner
@@ -11,7 +11,6 @@ import scala.swing.UIElement
  * @author FS
  */
 trait ClipboardSupport extends ClipboardOwner { this: UIElement =>
-
   def clipboardContent: Option[String] = {
     val contents = toolkit.getSystemClipboard.getContents(null)
     if (contents == null || !contents.isDataFlavorSupported(DataFlavor.stringFlavor)) None
@@ -19,5 +18,4 @@ trait ClipboardSupport extends ClipboardOwner { this: UIElement =>
   }
 
   override def lostOwnership(clipboard: Clipboard, contents: Transferable) = ()
-
 }

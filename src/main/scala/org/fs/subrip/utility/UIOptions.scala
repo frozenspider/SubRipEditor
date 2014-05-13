@@ -1,4 +1,4 @@
-package org.fs.subrip.core
+package org.fs.subrip.utility
 
 /**
  * @author FS
