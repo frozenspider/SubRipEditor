@@ -40,3 +40,15 @@ License
 -------
 
 Licensed under MIT license (see LICENSE file nearby).
+
+
+Changelog
+---------
+### 1.0.2
+* TimeTark now supports mills separated by dot, in addition to comma
+* Renamed main class to SubRipEditorMain
+* Implemented workaround for UTF-8 BOM character
+* Fixed case when file is terminated by EOF with no newline
+
+### 1.0.1
+* Fixed Find Next
