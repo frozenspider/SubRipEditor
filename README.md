@@ -46,6 +46,9 @@ Changelog
 ---------
 ### 1.0.3
 * Parsing rules for TimeMark slightly relaxed, things like 0:0:0,0
+* File contol button moved to top
+* Added "Shift Before" and "Shift After" buttons
+* Timing shift buttons separated from control buttons
 
 ### 1.0.2
 * TimeTark now supports mills separated by dot, in addition to comma

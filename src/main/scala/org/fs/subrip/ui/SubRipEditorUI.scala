@@ -86,6 +86,8 @@ class SubRipEditorUI extends Frame
     val setBtn = UnfocusableButton("Set")
     val removeBtn = UnfocusableButton("Remove")
     val shiftAllBtn = UnfocusableButton("Shift All")
+    val shiftBeforeBtn = UnfocusableButton("Shift Before")
+    val shiftAfterBtn = UnfocusableButton("Shift After")
 
     val arrowLabel = new Label(" --> ")
     val editorScrollPane = new ScrollPane(editorPane)
@@ -99,6 +101,16 @@ class SubRipEditorUI extends Frame
       }
 
       import BorderPanel.Position._
+      val topPanel = new BorderPanel {
+        val fileButtonsPanel = new FlowPanel(
+          loadBtn,
+          reloadBtn,
+          saveBtn,
+          closeBtn
+        )
+        layout(fileButtonsPanel) = West
+      }
+      layout(topPanel) = North
       val centerPanel = new BorderPanel {
         val tabbedPane = new TabbedPane {
           pages += new TabbedPane.Page("Subtitles", new ScrollPane(subtitlesList))
@@ -125,22 +137,20 @@ class SubRipEditorUI extends Frame
         layout(bottomTopPanel) = North
         layout(editorScrollPane) = Center
         val buttonPanel = new BorderPanel {
-          val fileButtonsPanel = new FlowPanel(
-            loadBtn,
-            reloadBtn,
-            saveBtn,
-            closeBtn
-          )
-          layout(fileButtonsPanel) = West
           val controlButtonsPanel = new FlowPanel(
             transliterateBtn,
             addBtn,
             insertBeforeBtn,
             setBtn,
-            removeBtn,
-            shiftAllBtn
+            removeBtn
           )
           layout(controlButtonsPanel) = Center
+          val timingButtonsPanel = new FlowPanel(
+            shiftAllBtn,
+            shiftBeforeBtn,
+            shiftAfterBtn
+          )
+          layout(timingButtonsPanel) = East
         }
         layout(buttonPanel) = South
       }
@@ -171,7 +181,8 @@ class SubRipEditorUI extends Frame
     styleComponents()
 
     listenTo(findNextBtn, findFromStartBtn, pasteLeftBtn, pasteRightBtn, loadBtn, reloadBtn, saveBtn, closeBtn,
-      transliterateBtn, addBtn, insertBeforeBtn, setBtn, removeBtn, shiftAllBtn, subtitlesList.mouse.clicks)
+      transliterateBtn, addBtn, insertBeforeBtn, setBtn, removeBtn, shiftAllBtn, shiftBeforeBtn, shiftAfterBtn,
+      subtitlesList.mouse.clicks)
     // Button reactions
     reactions += {
       case ButtonClicked(`findNextBtn`)      => findNextAction()
@@ -188,6 +199,8 @@ class SubRipEditorUI extends Frame
       case ButtonClicked(`setBtn`)           => setEntryAction()
       case ButtonClicked(`removeBtn`)        => removeEntryAction()
       case ButtonClicked(`shiftAllBtn`)      => shiftAllTimingAction()
+      case ButtonClicked(`shiftBeforeBtn`)   => shiftTimingBeforeAction()
+      case ButtonClicked(`shiftAfterBtn`)    => shiftTimingAfterAction()
     }
     // Mouse click reactions
     reactions += {
@@ -275,14 +288,9 @@ class SubRipEditorUI extends Frame
       case Failure(ex) => showError(ex)
     }
     unsavedChanges = false
+    clearSelection()
     this.title = file.getName + " - " + SubRipEditorUI.DefaultTitle
   }
-
-  private def selectedIdxOption: Option[Int] =
-    subtitlesList.selection.leadIndex match {
-      case -1 => None
-      case x  => Some(x)
-    }
 
   private def createFileChooser: FileChooser = {
     val lastAccessdFile = new File(options.lastAccessedFilePath)
@@ -301,6 +309,21 @@ class SubRipEditorUI extends Frame
       case Dialog.Result.Yes | Dialog.Result.Ok => true
       case _                                    => false
     }
+  }
+
+  //
+  // Selection
+  //
+  private def selectedIdxOption: Option[Int] =
+    subtitlesList.selection.anchorIndex match {
+      case -1 => None
+      case x  => Some(x)
+    }
+
+  private def clearSelection(): Unit = {
+    // FIXME: This isn't working!
+    val listPeer: javax.swing.JList[_] = subtitlesList.peer.asInstanceOf[javax.swing.JList[_]]
+    listPeer.getSelectionModel().clearSelection()
   }
 
   //
@@ -369,6 +392,7 @@ class SubRipEditorUI extends Frame
         currFile = None
         unsavedChanges = false
         subtitlesList.listData = Nil
+        clearSelection()
         this.title = SubRipEditorUI.DefaultTitle
       }
     }
@@ -432,20 +456,59 @@ class SubRipEditorUI extends Frame
     }
 
   def shiftAllTimingAction(): Unit =
-    Dialog.showInput[String](message = "Number of milliseconds to shift?", initial = "0") match {
-      case Some(msStr) if msStr matches "-?\\d+" =>
-        try {
-          val ms = msStr.toLong
-          subtitlesList.listData = subtitlesList.listData map {
-            case SubRipRecord(id, start, end, text) => SubRipRecord(id, start + ms, end + ms, text)
-          }
-          subtitlesList.fireSubtitlesUpdated()
-          unsavedChanges = true
-        } catch {
-          case th: Throwable => showError(th)
-        }
-      case _ => ()
+    for {
+      msStr <- Dialog.showInput[String](message = "Number of milliseconds to shift?", initial = "0")
+      if msStr matches "-?\\d+"
+    } try {
+      val ms = msStr.toLong
+      subtitlesList.listData = subtitlesList.listData map {
+        case SubRipRecord(id, start, end, text) => SubRipRecord(id, start + ms, end + ms, text)
+      }
+      subtitlesList.fireSubtitlesUpdated()
+      unsavedChanges = true
+      selectedIdxOption map (idx => subtitlesList.selectIndices(idx))
+    } catch {
+      case th: Throwable => showError(th)
     }
+
+  def shiftTimingBeforeAction(): Unit =
+    for {
+      idx <- selectedIdxOption
+      msStr <- Dialog.showInput[String](message = "Number of milliseconds to shift?", initial = "0")
+      if msStr matches "-?\\d+"
+    } try {
+      val targetId = subtitlesList.listData(idx).id
+      val ms = msStr.toLong
+      subtitlesList.listData = subtitlesList.listData collect {
+        case SubRipRecord(id, start, end, text) if (id <= targetId) => SubRipRecord(id, start + ms, end + ms, text)
+        case rest: SubRipRecord                                     => rest
+      }
+      subtitlesList.fireSubtitlesUpdated()
+      unsavedChanges = true
+      subtitlesList.selectIndices(idx)
+    } catch {
+      case th: Throwable => showError(th)
+    }
+
+  def shiftTimingAfterAction(): Unit =
+    for {
+      idx <- selectedIdxOption
+      msStr <- Dialog.showInput[String](message = "Number of milliseconds to shift?", initial = "0")
+      if msStr matches "-?\\d+"
+    } try {
+      val targetId = subtitlesList.listData(idx).id
+      val ms = msStr.toLong
+      subtitlesList.listData = subtitlesList.listData collect {
+        case SubRipRecord(id, start, end, text) if (id >= targetId) => SubRipRecord(id, start + ms, end + ms, text)
+        case rest: SubRipRecord                                     => rest
+      }
+      subtitlesList.fireSubtitlesUpdated()
+      unsavedChanges = true
+      subtitlesList.selectIndices(idx)
+    } catch {
+      case th: Throwable => showError(th)
+    }
+
 }
 
 object SubRipEditorUI {
