@@ -283,6 +283,7 @@ class SubRipEditorUI extends Frame
     loadSubtitlesFile(file) match {
       case Success((subs, comment)) => {
         subtitlesList.listData = subs
+        subtitlesList.ensureIndexIsVisible(0)
         commentsPane.text = comment
       }
       case Failure(ex) => showError(ex)
@@ -406,7 +407,7 @@ class SubRipEditorUI extends Frame
     createRecord match {
       case Some(rec) => {
         val oldSubs = subtitlesList.listData
-        val newRec = rec copy (id = oldSubs.last.id + 1)
+        val newRec = rec copy (id = oldSubs.lastOption.map(_.id).getOrElse(0) + 1)
         val newIdx = oldSubs.size
         subtitlesList.listData = oldSubs :+ newRec
         subtitlesList.fireSubtitlesUpdated(newIdx)
