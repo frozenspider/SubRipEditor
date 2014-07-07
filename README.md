@@ -44,6 +44,14 @@ Licensed under MIT license (see LICENSE file nearby).
 
 Changelog
 ---------
+### 1.0.3
+* Parsing rules for TimeMark slightly relaxed, things like 0:0:0,0 are accepted now
+* File contol button moved to top
+* Added "Shift Before" and "Shift After" buttons
+* Timing shift buttons separated from control buttons
+* Loading a file now automatically scrolls to the top
+* Fixed "Add" button not working after closing a file
+
 ### 1.0.2
 * TimeTark now supports mills separated by dot, in addition to comma
 * Renamed main class to SubRipEditorMain

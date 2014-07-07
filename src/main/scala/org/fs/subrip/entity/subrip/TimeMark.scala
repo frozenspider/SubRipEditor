@@ -48,7 +48,7 @@ object TimeMark {
 
     // Parser combinator is too cumbersome to use here. Besides, they don't use backtracking without PackratParsers
     lazy val timeMarkParser: Parser[TimeMark] =
-      """(\d+:)?\d\d:\d\d[,.]\d\d\d""".r ^^ { s =>
+      """(\d+:)?\d?\d:\d?\d[,.]\d?\d?\d""".r ^^ { s =>
         val split = s.split("[:,.]").map(_.toInt).reverse.padTo(4, 0).reverse
         TimeMark(split(0), split(1), split(2), split(3))
       }

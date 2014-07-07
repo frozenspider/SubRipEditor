@@ -54,7 +54,9 @@ class TimeMarkSpec
       (("String",      "Expected TimeMmark")),
       ("12:34:56,789", TimeMark( 12,34,56,789)),
       (   "34:56,789", TimeMark(  0,34,56,789)),
-      (   "34:56.789", TimeMark(  0,34,56,789))
+      (   "34:56.789", TimeMark(  0,34,56,789)),
+      (     "2:3:4.5", TimeMark(  2, 3, 4,  5)),
+      (       "3:4.5", TimeMark(  0, 3, 4,  5))
     ) // format: ON
     forAll(examples) { (str, expected) =>
       val parsed = TimeMark.fromString(str)
