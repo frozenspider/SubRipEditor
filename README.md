@@ -45,6 +45,7 @@ Licensed under MIT license (see LICENSE file nearby).
 Changelog
 ---------
 ### 1.0.4
+* Reloading current file no longer scrolls list to the top
 
 ### 1.0.3
 * Parsing rules for TimeMark slightly relaxed, things like 0:0:0,0 are accepted now

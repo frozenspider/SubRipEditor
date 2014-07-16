@@ -277,13 +277,13 @@ class SubRipEditorUI extends Frame
     }
   }
 
-  private def loadSubtitlesFileInner(file: File): Unit = {
+  private def loadSubtitlesFileInner(file: File, scrollToTop: Boolean): Unit = {
     currFile = Some(file)
     updateOptions(options copy (lastAccessedFilePath = file.getAbsolutePath))
     loadSubtitlesFile(file) match {
       case Success((subs, comment)) => {
         subtitlesList.listData = subs
-        subtitlesList.ensureIndexIsVisible(0)
+        if (scrollToTop) subtitlesList.ensureIndexIsVisible(0)
         commentsPane.text = comment
       }
       case Failure(ex) => showError(ex)
@@ -356,7 +356,7 @@ class SubRipEditorUI extends Frame
   private def loadSubtitlesFileAction(): Unit = {
     val fc = createFileChooser
     fc.showOpenDialog(null) match {
-      case FileChooser.Result.Approve => loadSubtitlesFileInner(fc.selectedFile)
+      case FileChooser.Result.Approve => loadSubtitlesFileInner(fc.selectedFile, true)
       case _                          => ()
     }
   }
@@ -364,7 +364,7 @@ class SubRipEditorUI extends Frame
   private def reloadSubtitlesFileAction(): Unit =
     currFile foreach { file =>
       if (noChangesOrSure)
-        loadSubtitlesFileInner(file)
+        loadSubtitlesFileInner(file, false)
     }
 
   private def saveSubtitlesFileAction(): Boolean = {
