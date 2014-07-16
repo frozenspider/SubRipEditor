@@ -335,7 +335,7 @@ class SubRipEditorUI extends Frame
   }
 
   private def findNextAction(): Unit = {
-    val toFind = searchField.text
+    val toFind = searchField.text.toLowerCase
     val from = selectedIdxOption.getOrElse(-1) + 1
     val idx = subtitlesList.listData drop (from) indexWhere (_.text.toLowerCase contains toFind)
     if (idx != -1) {
@@ -345,7 +345,7 @@ class SubRipEditorUI extends Frame
   }
 
   private def findFromStartAction(): Unit = {
-    val toFind = searchField.text
+    val toFind = searchField.text.toLowerCase
     val idx = subtitlesList.listData indexWhere (_.text.toLowerCase contains toFind)
     if (idx != -1) {
       subtitlesList.selectIndices(idx)
