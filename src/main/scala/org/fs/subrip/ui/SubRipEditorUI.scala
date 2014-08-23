@@ -55,7 +55,7 @@ class SubRipEditorUI extends Frame
   private lazy val subtitlesList = new SubtitlesList(IndexedSeq(
     SubRipRecord(
       id = 1,
-      start = TimeMark(01, 23, 45, 678),
+      start = TimeMark(1, 23, 45, 678),
       end = TimeMark(12, 34, 56, 789),
       text = "Double-click entity to copy it's content into editor screen"
     )

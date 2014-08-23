@@ -33,7 +33,7 @@ class SubRipRecordTextFormatReaderSpec
     val actual = reader.read(new StringReader(src)).get
     val expected = SubRipRecord( // format: OFF
       id    = 1,
-      start = TimeMark(0, 0, 0, 000),
+      start = TimeMark(0, 0, 0, 0),
       end   = TimeMark(100, 59, 59, 333),
       text  = "Two\nLines"
     ) // format: ON
@@ -50,7 +50,7 @@ class SubRipRecordTextFormatReaderSpec
     val actual = reader.read(new StringReader(src)).get
     val expected = SubRipRecord( // format: OFF
       id    = 1,
-      start = TimeMark(0, 0, 0, 000),
+      start = TimeMark(0, 0, 0, 0),
       end   = TimeMark(100, 59, 59, 333),
       text  = "Two\nLines"
     ) // format: ON
@@ -68,7 +68,7 @@ class SubRipRecordTextFormatReaderSpec
     def getEntity(i: Int) =
       SubRipRecord( // format: OFF
         id    = i,
-        start = TimeMark(0, 0, 0, 000),
+        start = TimeMark(0, 0, 0, 0),
         end   = TimeMark(100, 59, 59, 333),
         text  = "Two\nLines"
       ) // format: ON
