@@ -52,6 +52,8 @@ Known issues
 
 Changelog
 ---------
+### 1.0.5
+
 ### 1.0.4
 * Reloading current file no longer scrolls list to the top
 * Fixed issue with uppercase letters in search field
