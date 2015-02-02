@@ -22,7 +22,7 @@ class SubRipRecordTextFormatWriterSpec
   it should "correctly output a single record" in {
     val record = SubRipRecord( // format: OFF
       id    = 1,
-      start = TimeMark(0, 0, 0, 000),
+      start = TimeMark(0, 0, 0, 0),
       end   = TimeMark(100, 59, 59, 333),
       text  = "Two\nLines"
     ) // format: ON
@@ -41,14 +41,14 @@ class SubRipRecordTextFormatWriterSpec
   it should "correctly output two records" in {
     val record1 = SubRipRecord( // format: OFF
       id    = 1,
-      start = TimeMark(0, 0, 10, 000),
-      end   = TimeMark(0, 0, 15, 001),
+      start = TimeMark(0, 0, 10, 0),
+      end   = TimeMark(0, 0, 15, 1),
       text  = "Two\nLines"
     ) // format: ON
     val record2 = SubRipRecord( // format: OFF
       id    = 2,
-      start = TimeMark(0, 10, 0, 000),
-      end   = TimeMark(0, 15, 0, 001),
+      start = TimeMark(0, 10, 0, 0),
+      end   = TimeMark(0, 15, 0, 1),
       text  = "Another\nThree\nLines"
     ) // format: ON
 

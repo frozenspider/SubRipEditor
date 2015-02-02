@@ -25,7 +25,9 @@ Some usage details
 *Transliterate* button serves for changing text written with incorrect keyboard layout on multi-lingual systems.
 Currently only support English <--> Russian layout changes.
 
-*Shift All* shifts time marks for all subtitle entries in the editor for a given amount of milliseconds.
+*Shift* buttons shifts time marks for subtitle entries in the editor for a given amount of milliseconds.
+
+*Shift Before* and *Shift After* shifts all entries before/after selected entry (inclusive).
 
 
 Planned features
@@ -42,8 +44,20 @@ License
 Licensed under MIT license (see LICENSE file nearby).
 
 
+Known issues
+------------
+
+(Re-)loading a file causes selection indicator to disappear, but it remains in the same place for the purpose of relative shift-buttons and "Find Next" 
+
+
 Changelog
 ---------
+### 1.0.4
+* Reloading current file no longer scrolls list to the top
+* Fixed issue with uppercase letters in search field
+* Fixed opening file in UTF-8 with BOM
+* Fixed issue with double-clicking list items (thanks for the bug, scala-swing!)
+
 ### 1.0.3
 * Parsing rules for TimeMark slightly relaxed, things like 0:0:0,0 are accepted now
 * File contol button moved to top

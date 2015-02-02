@@ -43,7 +43,15 @@ class SubtitlesList[A](initialData: IndexedSeq[A])(implicit writer: TextWriter[A
     }
 
   def selectedEntry: Option[A] =
-    selection.items.headOption
+    selectedItems.headOption
+
+  /**
+   * Workaround for `selection.items` being a lazy value (what the hell, seriously?)
+   *
+   * TODO: Remove this workaround when scala-swing starts makins sense
+   */
+  private def selectedItems: Seq[A] =
+    typedPeer.getSelectedValues.map(_.asInstanceOf[A])
 
   private def subtitlesModel: SubtitlesListModel =
     typedPeer.getModel.asInstanceOf[SubtitlesListModel]

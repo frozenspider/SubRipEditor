@@ -55,7 +55,7 @@ class SubRipEditorUI extends Frame
   private lazy val subtitlesList = new SubtitlesList(IndexedSeq(
     SubRipRecord(
       id = 1,
-      start = TimeMark(01, 23, 45, 678),
+      start = TimeMark(1, 23, 45, 678),
       end = TimeMark(12, 34, 56, 789),
       text = "Double-click entity to copy it's content into editor screen"
     )
@@ -277,13 +277,13 @@ class SubRipEditorUI extends Frame
     }
   }
 
-  private def loadSubtitlesFileInner(file: File): Unit = {
+  private def loadSubtitlesFileInner(file: File, scrollToTop: Boolean): Unit = {
     currFile = Some(file)
     updateOptions(options copy (lastAccessedFilePath = file.getAbsolutePath))
     loadSubtitlesFile(file) match {
       case Success((subs, comment)) => {
         subtitlesList.listData = subs
-        subtitlesList.ensureIndexIsVisible(0)
+        if (scrollToTop) subtitlesList.ensureIndexIsVisible(0)
         commentsPane.text = comment
       }
       case Failure(ex) => showError(ex)
@@ -335,7 +335,7 @@ class SubRipEditorUI extends Frame
   }
 
   private def findNextAction(): Unit = {
-    val toFind = searchField.text
+    val toFind = searchField.text.toLowerCase
     val from = selectedIdxOption.getOrElse(-1) + 1
     val idx = subtitlesList.listData drop (from) indexWhere (_.text.toLowerCase contains toFind)
     if (idx != -1) {
@@ -345,7 +345,7 @@ class SubRipEditorUI extends Frame
   }
 
   private def findFromStartAction(): Unit = {
-    val toFind = searchField.text
+    val toFind = searchField.text.toLowerCase
     val idx = subtitlesList.listData indexWhere (_.text.toLowerCase contains toFind)
     if (idx != -1) {
       subtitlesList.selectIndices(idx)
@@ -356,7 +356,7 @@ class SubRipEditorUI extends Frame
   private def loadSubtitlesFileAction(): Unit = {
     val fc = createFileChooser
     fc.showOpenDialog(null) match {
-      case FileChooser.Result.Approve => loadSubtitlesFileInner(fc.selectedFile)
+      case FileChooser.Result.Approve => loadSubtitlesFileInner(fc.selectedFile, true)
       case _                          => ()
     }
   }
@@ -364,7 +364,7 @@ class SubRipEditorUI extends Frame
   private def reloadSubtitlesFileAction(): Unit =
     currFile foreach { file =>
       if (noChangesOrSure)
-        loadSubtitlesFileInner(file)
+        loadSubtitlesFileInner(file, false)
     }
 
   private def saveSubtitlesFileAction(): Boolean = {
