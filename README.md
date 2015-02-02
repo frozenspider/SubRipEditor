@@ -55,6 +55,8 @@ Changelog
 ### 1.0.4
 * Reloading current file no longer scrolls list to the top
 * Fixed issue with uppercase letters in search field
+* Fixed opening file in UTF-8 with BOM
+* Fixed issue with double-clicking list items (thanks for the bug, scala-swing!)
 
 ### 1.0.3
 * Parsing rules for TimeMark slightly relaxed, things like 0:0:0,0 are accepted now
