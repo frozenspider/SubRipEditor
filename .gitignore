@@ -2,14 +2,19 @@
 /bin
 .classpath
 .project
-.cache
+.cache*
 
 # sbt
 target/
 src-managed/
+.history
 
 # Application
 options.conf
 
 # Assembly
 SubRipEditor-*.jar
+
+# Development
+/_inspect
+
