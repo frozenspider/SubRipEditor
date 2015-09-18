@@ -22,7 +22,7 @@ object SubRipRecordTextFormat
       (`Br*`) ~>
       (Decimal <~ Br) ~ // Id
       (timeMarkParser <~ " --> ") ~ (timeMarkParser <~ Br) ~ // Start --> End
-      ("""[^\r\n]+""".r <~ (Br | Eof)).* <~ // Text lines
+      ("""[^\r\n]+""".r <~ (Br.+ | Eof)).* <~ // Text lines
       ((`Br*` <~ Eof) | guard(Br <~ Decimal)) // Until double linebreak with new entry ID is encountered
     ) ^^ { case (id ~ start ~ end ~ lines) => SubRipRecord(id, start, end, lines mkString "\n") }
 
