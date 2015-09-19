@@ -23,13 +23,11 @@ class SubRipRecordTextFormatReaderSpec
   behavior of "srt parser"
 
   it should "parse single entry" in {
-    val src = ("" +
-      "1\n" +
-      "00:00,000 --> 100:59:59,333\n" +
-      "Two\n" +
-      "Lines\n" +
-      "\n"
-    )
+    val src = """|1
+                 |00:00,000 --> 100:59:59,333
+                 |Two
+                 |Lines
+                 |""".stripMargin
     val actual = reader.read(new StringReader(src)).get
     val expected = SubRipRecord( // format: OFF
       id    = 1,
@@ -41,12 +39,10 @@ class SubRipRecordTextFormatReaderSpec
   }
 
   it should "parse single entry terminated without line breaks" in {
-    val src = ("" +
-      "1\n" +
-      "00:00,000 --> 100:59:59,333\n" +
-      "Two\n" +
-      "Lines"
-    )
+    val src = """|1
+                 |00:00,000 --> 100:59:59,333
+                 |Two
+                 |Lines""".stripMargin
     val actual = reader.read(new StringReader(src)).get
     val expected = SubRipRecord( // format: OFF
       id    = 1,
@@ -58,13 +54,12 @@ class SubRipRecordTextFormatReaderSpec
   }
 
   it should "parse 10000 entries" in {
-    def getEntryStr(i: Int): String = {
-      s"$i\n" +
-        "00:00,000 --> 100:59:59,333\n" +
-        "Two\n" +
-        "Lines\n" +
-        "\n"
-    }
+    def getEntryStr(i: Int) =
+      s"""|$i
+          |00:00,000 --> 100:59:59,333
+          |Two
+          |Lines
+          |""".stripMargin
     def getEntity(i: Int) =
       SubRipRecord( // format: OFF
         id    = i,
@@ -72,7 +67,7 @@ class SubRipRecordTextFormatReaderSpec
         end   = TimeMark(100, 59, 59, 333),
         text  = "Two\nLines"
       ) // format: ON
-    val src = ((1 to 10000) map getEntryStr) mkString ""
+    val src = ((1 to 10000) map getEntryStr) mkString "\n"
     val actual = new SeqParsingFormat(reader).read(new StringReader(src)).get
     val expected = (1 to 10000) map getEntity
     assert(expected === actual)

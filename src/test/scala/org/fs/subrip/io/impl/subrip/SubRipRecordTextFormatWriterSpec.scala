@@ -5,7 +5,6 @@ import org.fs.subrip.entity.subrip.TimeMark
 import org.fs.subrip.io.TextWriter
 import org.junit.runner.RunWith
 import org.scalatest._
-import org.scalatest.prop.TableDrivenPropertyChecks
 import org.scalatest.junit.JUnitRunner
 
 /**
@@ -27,15 +26,12 @@ class SubRipRecordTextFormatWriterSpec
       text  = "Two\nLines"
     ) // format: ON
 
-    assert(
-      writer.asString(record) === ("" +
-        "1\n" +
-        "00:00:00,000 --> 100:59:59,333\n" +
-        "Two\n" +
-        "Lines\n" +
-        "\n"
-      )
-    )
+    assert(writer.asString(record) === """|1
+                                          |00:00:00,000 --> 100:59:59,333
+                                          |Two
+                                          |Lines
+                                          |
+                                          |""".stripMargin)
   }
 
   it should "correctly output two records" in {
@@ -54,19 +50,18 @@ class SubRipRecordTextFormatWriterSpec
 
     assert(
       (writer.asString(record1) ++ writer.asString(record2)) ===
-        ("""
-1
-00:00:10,000 --> 00:00:15,001
-Two
-Lines
-
-2
-00:10:00,000 --> 00:15:00,001
-Another
-Three
-Lines
-
-""".trim + "\n\n")
+        """|1
+           |00:00:10,000 --> 00:00:15,001
+           |Two
+           |Lines
+           |
+           |2
+           |00:10:00,000 --> 00:15:00,001
+           |Another
+           |Three
+           |Lines
+           |
+           |""".stripMargin
     )
   }
 }

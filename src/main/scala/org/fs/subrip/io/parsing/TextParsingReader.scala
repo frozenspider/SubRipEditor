@@ -1,11 +1,12 @@
 package org.fs.subrip.io.parsing
 
 import scala.util.Try
+
+import org.fs.subrip.entity.ex.ReadFailedException
 import org.fs.subrip.io.TextReader
 import org.fs.subrip.utility.StopWatch
 import org.fs.subrip.utility.SubRipParsers._
 import org.slf4s.Logging
-import org.fs.subrip.entity.ex.ReadFailedException
 
 /**
  * @author FS

@@ -2,8 +2,8 @@ package org.fs.subrip.core.transliteration
 
 import org.junit.runner.RunWith
 import org.scalatest._
-import org.scalatest.prop.TableDrivenPropertyChecks
 import org.scalatest.junit.JUnitRunner
+import org.scalatest.prop.TableDrivenPropertyChecks
 
 /**
  * @author FS
