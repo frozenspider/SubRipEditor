@@ -19,11 +19,14 @@ object SubRipRecordTextFormat
 
   override lazy val parser: Parser[SubRipRecord] =
     (
-      (`Br*`) ~>
+      (`Br*`) ~> // Prefixed with arbitrary many newlines
       (Decimal <~ Br) ~ // Id
-      (timeMarkParser <~ " --> ") ~ (timeMarkParser <~ Br) ~ // Start --> End
-      ("""[^\r\n]+""".r <~ (Br | Eof)).* <~ // Text lines
-      ((`Br*` <~ Eof) | guard(Br <~ Decimal)) // Until double linebreak with new entry ID is encountered
+      (timeMarkParser <~ " --> ") ~ (timeMarkParser) ~ // Start --> End
+      (Br ~> """[^\r\n]+""".r).* <~ // Text lines
+      (`Br*` ~ ( // Followed by optional newlines...
+        Eof | // ...till the end...
+        guard(Decimal) // ...or until new entry ID is encountered
+      ))
     ) ^^ { case (id ~ start ~ end ~ lines) => SubRipRecord(id, start, end, lines mkString "\n") }
 
   override def logAfterParsing = None
