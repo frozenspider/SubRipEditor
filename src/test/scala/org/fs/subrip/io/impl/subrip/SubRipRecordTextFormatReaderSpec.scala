@@ -7,8 +7,8 @@ import org.fs.subrip.entity.subrip.TimeMark
 import org.fs.subrip.io.parsing.SeqParsingFormat
 import org.junit.runner.RunWith
 import org.scalatest._
-import org.scalatest.prop.TableDrivenPropertyChecks
 import org.scalatest.junit.JUnitRunner
+import org.scalatest.prop.TableDrivenPropertyChecks
 
 /**
  * @author FS
@@ -75,6 +75,35 @@ class SubRipRecordTextFormatReaderSpec
     val src = ((1 to 10000) map getEntryStr) mkString ""
     val actual = new SeqParsingFormat(reader).read(new StringReader(src)).get
     val expected = (1 to 10000) map getEntity
+    assert(expected === actual)
+  }
+
+  it should "parse double-newline separator" in {
+    val src = """|1
+                 |00:00,000 --> 00:01,000
+                 |A
+                 |B
+                 |
+                 |
+                 |2
+                 |00:01,000 --> 00:02,000
+                 |C
+                 |D""".stripMargin.trim
+    val actual = new SeqParsingFormat(reader).read(new StringReader(src)).get
+    val expected = Seq( // format: OFF
+      SubRipRecord(
+        id    = 1,
+        start = TimeMark(0, 0, 0, 0),
+        end   = TimeMark(0, 0, 1, 0),
+        text  = "A\nB"
+      ),
+      SubRipRecord(
+        id    = 2,
+        start = TimeMark(0, 0, 1, 0),
+        end   = TimeMark(0, 0, 2, 0),
+        text  = "C\nD"
+      )
+    ) // format: ON
     assert(expected === actual)
   }
 }

@@ -12,13 +12,11 @@ import scala.util.parsing.combinator.RegexParsers
 object SubRipParsers extends RegexParsers {
   override val skipWhitespace = false
 
-  val Eof: Parser[Unit] = new Parser[Unit] {
-    override def apply(in: Input): ParseResult[Unit] = if (in.atEnd) Success((), in) else Failure("Not EOF", in)
-  }
-
   def digits(i: Int): Parser[Int] = s"\\d{$i}".r ^^ { _.toInt }
 
   val Decimal: Parser[Int] = """\d+""".r ^^ { _.toInt }
+
+  val Eof: Parser[Unit] = """\Z""".r ^^^ ()
 
   val Br: Parser[Unit] = """\r?\n""".r ^^^ ()
 
