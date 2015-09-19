@@ -3,7 +3,7 @@ SubRipEditor
 
 *Simple stand-alone editor for .srt subtitle files.*
 
-I'd wish I could say that editor is lightweight, but it's hardly so due to Scala library size (runnable jar size currently is about 9 MB)
+I'd wish I could say that editor is lightweight, but it's hardly so due to Scala library size (runnable jar size currently is about 13 MB)
 
 Editor is pretty simple and straightforward - e.g. it lacks media player integration
 and it's unlikely it will be added later.
