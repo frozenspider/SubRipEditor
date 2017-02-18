@@ -1,16 +1,16 @@
 # Eclipse
 /bin
+.settings
 .classpath
 .project
-.cache*
+.cache-*
 
 # sbt
 target/
-src-managed/
-.history
-
-# Application
-options.conf
+src_managed/
+lib_managed/
+project/project/
+project/target/
 
 # Assembly
 SubRipEditor-*.jar
@@ -18,3 +18,8 @@ SubRipEditor-*.jar
 # Development
 /_inspect
 
+# Application
+options.conf
+
+*.class
+*.log

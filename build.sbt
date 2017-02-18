@@ -1,23 +1,18 @@
 name         := "SubRipEditor"
-
 description  := "Simple editor for SubRipText (.srt) subtitles"
-
 version      := "1.0.6-dev"
-
 scalaVersion := "2.11.7"
 
+sourceManaged            <<= baseDirectory { _ / "src_managed" }
+sourceManaged in Compile <<= baseDirectory { _ / "src_managed" / "main" / "scala" }
+sourceManaged in Test    <<= baseDirectory { _ / "src_managed" / "test" / "scala" }
 
-EclipseKeys.withSource := true
-
-EclipseKeys.createSrc  := EclipseCreateSrc.Default + EclipseCreateSrc.Managed
-
-
-sourceManaged            <<= baseDirectory { _ / "src-managed" }
-
-sourceManaged in Compile <<= baseDirectory { _ / "src-managed" / "main" / "scala" }
-
-sourceManaged in Test    <<= baseDirectory { _ / "src-managed" / "test" / "scala" }
-
+lazy val root = (project in file("."))
+  .enablePlugins(BuildInfoPlugin)
+  .settings(
+    buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion, buildInfoBuildNumber),
+    buildInfoPackage := "org.fs.subrip"
+  )
 
 libraryDependencies ++= Seq(
   // Test
@@ -33,11 +28,3 @@ libraryDependencies ++= Seq(
   "org.scala-lang.modules"           %% "scala-xml"                % "1.0.5",
   "com.googlecode.juniversalchardet" %  "juniversalchardet"        % "1.0.3"
 )
-
-buildInfoSettings
-
-sourceGenerators in Compile <+= buildInfo
-
-buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion)
-
-buildInfoPackage := "org.fs.subrip"
