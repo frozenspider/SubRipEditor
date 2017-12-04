@@ -1,4 +1,4 @@
-SubRipEditor
+subrip-editor
 ============
 
 *Simple stand-alone editor for .srt subtitle files.*
