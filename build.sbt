@@ -19,10 +19,10 @@ libraryDependencies ++= Seq(
   "org.slf4s"                        %% "slf4s-api"                % "1.7.25",
   "ch.qos.logback"                   %  "logback-classic"          % "1.1.2",
   // Other
-  "org.scala-lang.modules"           %% "scala-swing"              % "2.0.0",
-  "org.scala-lang.modules"           %% "scala-parser-combinators" % "1.0.6",
+  "org.scala-lang.modules"           %% "scala-swing"              % "2.1.1",
+  "org.scala-lang.modules"           %% "scala-parser-combinators" % "1.1.2",
   "org.scala-lang.modules"           %% "scala-xml"                % "1.0.6",
-  "com.typesafe"                     %  "config"                   % "1.3.0",
+  "com.typesafe"                     %  "config"                   % "1.3.2",
   "com.googlecode.juniversalchardet" %  "juniversalchardet"        % "1.0.3",
   // Test
   "junit"                            %  "junit"                    % "4.12"  % "test",
